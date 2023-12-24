@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>domaci</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: none;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    button {
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    
+    .quantity-column {
+      white-space: nowrap;
+    }
+
+    #total-table-price {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <table id="items-table">
+    <thead>
+      <tr>
+        <th>Naziv</th>
+        <th>Cena</th>
+        <th class="quantity-column">Količina</th>
+        <th>Ukupna Cena</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <p>Ukupna Cena Tabele: <span id="total-table-price">0</span></p>
+
+  
+  <script>
+   
+    const items = [
+      { "naziv": "Chair", "komada": 1, "cena": 233 },
+      { "naziv": "Car", "komada": 3, "cena": 324 },
+      { "naziv": "Computer", "komada": 2, "cena": 319 },
+      { "naziv": "Chair", "komada": 3, "cena": 405 },
+      { "naziv": "Pizza", "komada": 3, "cena": 121 },
+      { "naziv": "Chips", "komada": 3, "cena": 58 },
+      { "naziv": "Table", "komada": 2, "cena": 324 },
+      { "naziv": "Sausages", "komada": 3, "cena": 204 },
+      { "naziv": "Pants", "komada": 3, "cena": 335 },
+      { "naziv": "Table", "komada": 1, "cena": 350 }
+    ];
+
+  
+    function calculateRowTotal(item) {
+      return item.komada * item.cena;
+    }
+
+    function calculateTotalTablePrice() {
+      let total = 0;
+      items.forEach(item => {
+        total += calculateRowTotal(item);
+      });
+      return total;
+    }
+
+   
+    function addQuantity(index) {
+      if (items[index].komada >= 0) {
+        items[index].komada++;
+        renderTable();
+      }
+    }
+
+   
+    function removeQuantity(index) {
+      if (items[index].komada > 0) {
+        items[index].komada--;
+        renderTable();
+      }
+    }
+
+   
+    function renderTable() {
+      const tableBody = document.querySelector('#items-table tbody');
+      tableBody.innerHTML = '';
+
+      items.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.naziv}</td>
+          <td>${item.cena}</td>
+          <td class="quantity-column">
+            <button onclick="removeQuantity(${index})">-</button>
+            ${item.komada}
+            <button onclick="addQuantity(${index})">+</button>
+          </td>
+          <td>${calculateRowTotal(item)}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+     
+      document.getElementById('total-table-price').textContent = calculateTotalTablePrice();
+    }
+
+  
+    renderTable();
+  </script>
+</body>
+</html>
